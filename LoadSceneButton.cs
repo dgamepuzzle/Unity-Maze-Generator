@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 //When the Button is clicked, the selected scene will be loaded
+[RequireComponent(typeof(Button))]
 public class LoadSceneButton : MonoBehaviour
 {
     public int sceneToLoad;

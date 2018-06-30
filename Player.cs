@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour
 {
     public float speed;
@@ -58,5 +59,15 @@ public class Player : MonoBehaviour
         #endif
 
         playerRigidbody.MovePosition(newPosition);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Goal")
+        {
+            transform.parent.GetComponent<SolveMazeButton>().PlayerReachedTheGoal();
+            Destroy(collision.gameObject);
+            Destroy(this.gameObject);
+        }
     }
 }

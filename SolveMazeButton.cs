@@ -6,6 +6,7 @@ using UnityEngine.UI;
 //When the button is clicked, it creates a Player and a Goal gameobject.
 //When the player touches the Goal's trigger collider, this button is informed and enables the congratulations text
 //The text dissapears after 3 seconds, or when the button is clicked again
+[RequireComponent(typeof(Button))]
 public class SolveMazeButton : MonoBehaviour
 {
     private bool gameIsOngoing=false;
@@ -26,8 +27,9 @@ public class SolveMazeButton : MonoBehaviour
             congratulationsText.enabled = false;
             gameIsOngoing = true;
             Vector3 playerPosition = new Vector3(((float)MazeProperties.MazeWidth / 2) - 0.5f, ((float)MazeProperties.MazeHeight / 2) - 0.5f, -0.3f);
-            Instantiate(player, playerPosition, transform.rotation);
-            Instantiate(goal, Vector3.Scale(playerPosition, new Vector3(-1, -1, 0.8f)), transform.rotation).transform.parent=transform;
+            //The player will be a child of the button, in order to inform it when he reached the object
+            Instantiate(player, playerPosition, transform.rotation).transform.parent=transform;
+            Instantiate(goal, Vector3.Scale(playerPosition, new Vector3(-1, -1, 0.8f)), transform.rotation);
         }
     }
 

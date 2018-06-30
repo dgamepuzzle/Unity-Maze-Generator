@@ -22,8 +22,8 @@ public class CellGrid : MonoBehaviour
         {
             GenerateOuterWall(wall);
         }
-
         GenerateMaze();
+        BuildMazeWalls();
     }
 
     //Moves the outer walls of the grid and scales them as necessary
@@ -51,6 +51,8 @@ public class CellGrid : MonoBehaviour
             for (int column=1; column<=gridSizeX; column++)
             {
                 Cell newCell = Instantiate(Cell, cellPosition, transform.rotation).GetComponent<Cell>();
+                cellInTheGrid[column - 1, row - 1] = newCell;
+                newCell.coordinatesOfCellInArray = new Vector2Int(column - 1, row - 1);
                 if (mazeGenerationAlgorith.Equals("Binary Tree"))
                 {
                     BinaryTreeGeneration(newCell, row, column);
@@ -59,21 +61,27 @@ public class CellGrid : MonoBehaviour
                 {
                     SidewinderGeneration(newCell, row, column);
                 }
-                else if (mazeGenerationAlgorith.Equals("Recursive Backtracking"))
-                {
-                    cellInTheGrid[column - 1,row - 1] = newCell;
-                    newCell.coordinatesOfCellInArray = new Vector2Int(column - 1, row - 1);
-                }
                 cellPosition.x = cellPosition.x + 1;
             }
             cellPosition.y = cellPosition.y + 1;
             //Points to the start of the Row
             cellPosition.x = (-(float)gridSizeX / 2) + 0.5f;
         }
-        //If we selected "Recursive Backtracking algorithm, the wall carving begins after all cells are Instantiated
+        //If we selected "Recursive Backtracking algorithm, the maze generation begins after all cells are Instantiated
         if (mazeGenerationAlgorith.Equals("Recursive Backtracking"))
         {
             RecursiveBacktrackingGeneration();
+        }
+    }
+
+    /// <summary>
+    /// Informs each cell build the walls that correspond to it
+    /// </summary>
+    private void BuildMazeWalls()
+    {
+        foreach (Cell mazeCell in cellInTheGrid)
+        {
+            mazeCell.BuildWalls();
         }
     }
 
@@ -85,9 +93,13 @@ public class CellGrid : MonoBehaviour
         //randomWallToBreak : 0 = "North" , 1 = "East"
         int randomWallToBreak = Random.Range(0, 2);
         if (((randomWallToBreak == 0) && (row != gridSizeY)) || (column == gridSizeX))
-            targetCell.DestroyWall("North");
+        {
+            targetCell.RemoveWallFromCell("North");
+        }
         else if (((randomWallToBreak == 1) && (column != gridSizeX)) || (row == gridSizeY))
-            targetCell.DestroyWall("East");
+        {
+            targetCell.RemoveWallFromCell("East");
+        }
     }
 
     
@@ -102,12 +114,12 @@ public class CellGrid : MonoBehaviour
         {
             sidewinderCellSetList.Add(targetCell);
             int randomCell = Random.Range(0, sidewinderCellSetList.Count);
-            sidewinderCellSetList[randomCell].DestroyWall("North");
+            sidewinderCellSetList[randomCell].RemoveWallFromCell("North");
             sidewinderCellSetList.Clear();
         }
         else if (((randomWallToBreak == 1) && (column != gridSizeX)) || (row == gridSizeY))
         {
-            targetCell.DestroyWall("East");
+            targetCell.RemoveWallFromCell("East");
             sidewinderCellSetList.Add(targetCell);
         }
     }
@@ -145,7 +157,7 @@ public class CellGrid : MonoBehaviour
                     noOfTriedDirections++;
                     if ((selectedCellCoordinates.y + 1 < gridSizeY) && (cellInTheGrid[selectedCellCoordinates.x, selectedCellCoordinates.y + 1].selectedInRecursiveBacktracking == false))
                     {
-                        currentCell.DestroyWall("North");
+                        currentCell.RemoveWallFromCell("North");
                         foundSuitableNeighborCell = true;
                         selectedCellCoordinates.y++;
                     }
@@ -155,7 +167,7 @@ public class CellGrid : MonoBehaviour
                     noOfTriedDirections++;
                     if ((selectedCellCoordinates.x + 1 < gridSizeX) && (cellInTheGrid[selectedCellCoordinates.x + 1, selectedCellCoordinates.y].selectedInRecursiveBacktracking == false))
                     {
-                        currentCell.DestroyWall("East");
+                        currentCell.RemoveWallFromCell("East");
                         foundSuitableNeighborCell = true;
                         selectedCellCoordinates.x++;
                     }
@@ -165,7 +177,7 @@ public class CellGrid : MonoBehaviour
                     noOfTriedDirections++;
                     if ((selectedCellCoordinates.y - 1 > -1) && (cellInTheGrid[selectedCellCoordinates.x, selectedCellCoordinates.y - 1].selectedInRecursiveBacktracking == false))
                     {
-                        cellInTheGrid[selectedCellCoordinates.x, selectedCellCoordinates.y - 1].DestroyWall("North");
+                        cellInTheGrid[selectedCellCoordinates.x, selectedCellCoordinates.y - 1].RemoveWallFromCell("North");
                         foundSuitableNeighborCell = true;
                         selectedCellCoordinates.y--;
                     }
@@ -175,7 +187,7 @@ public class CellGrid : MonoBehaviour
                     noOfTriedDirections++;
                     if ((selectedCellCoordinates.x - 1 > -1) && (cellInTheGrid[selectedCellCoordinates.x - 1, selectedCellCoordinates.y].selectedInRecursiveBacktracking == false))
                     {
-                        cellInTheGrid[selectedCellCoordinates.x - 1, selectedCellCoordinates.y].DestroyWall("East");
+                        cellInTheGrid[selectedCellCoordinates.x - 1, selectedCellCoordinates.y].RemoveWallFromCell("East");
                         foundSuitableNeighborCell = true;
                         selectedCellCoordinates.x--;
                     }

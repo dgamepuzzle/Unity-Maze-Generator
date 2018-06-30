@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 //When the button is pressed, it collects all the input data from the Main Menu, and saves them using the MazeProperties static class
+[RequireComponent(typeof(Button))]
 public class GenerateMazeButton : MonoBehaviour
 {
     public InputField mazeHeightField;
@@ -21,8 +22,8 @@ public class GenerateMazeButton : MonoBehaviour
         {
             return;
         }
-        MazeProperties.MazeHeight = System.Int32.Parse(mazeHeightField.text);
-        MazeProperties.MazeWidth = System.Int32.Parse(mazeWidthField.text);
+        MazeProperties.MazeHeight = ParseInputField(mazeHeightField);
+        MazeProperties.MazeWidth = ParseInputField(mazeWidthField);
         string selectedAlgorithm=null;
         switch (algorithSelectionDropdown.value)
         {
@@ -39,6 +40,17 @@ public class GenerateMazeButton : MonoBehaviour
         MazeProperties.MazeGenerationAlgorithm=selectedAlgorithm;
         if ((MazeProperties.MazeHeight>2)&&(MazeProperties.MazeWidth>2))
             SceneManager.LoadScene(1);
+
+    }
+
+    /// <summary>
+    /// Parses an InputField and returns its number as an integer
+    /// </summary>
+    private int ParseInputField(InputField targetField)
+    {
+        int number;
+        System.Int32.TryParse(targetField.text, out number);
+        return number;
 
     }
 
