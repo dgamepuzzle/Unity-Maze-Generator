@@ -25,18 +25,19 @@ public class CameraScript : MonoBehaviour {
         Vector3 bottomLeftPosition = new Vector3((-(float)MazeProperties.MazeWidth / 2) - (0.1f* MazeProperties.MazeWidth/10), -((float)MazeProperties.MazeHeight / 2) - (1.3f * MazeProperties.MazeHeight / 10), -0.3f);
         bottomLeftRenderer.transform.position = bottomLeftPosition;
         topRightRenderer.transform.position = Vector3.Scale(bottomLeftPosition, new Vector3(-1, -0.8f, 0.8f));
+        StartCoroutine(ZoomOut());
     }
-	
-    /*
-     * Zooms the camera out every frame, until both target renderers are visible
-     */
-	private void Update ()
+
+
+    private IEnumerator ZoomOut()
     {
-        if((!bottomLeftRenderer.isVisible)&&(!topRightRenderer.isVisible))
+        while ((!bottomLeftRenderer.isVisible) && (!topRightRenderer.isVisible))
         {
             thisCam.orthographicSize += zoomingSpeed;
+            //The camera changes its position depending on the zoom level, to keep the Maze centered regardless of the Button canvas
+            transform.position = new Vector3(transform.position.x, -thisCam.orthographicSize / 10, transform.position.z);
+            yield return null;
         }
-        //The camera changes its position depending on the zoom level, to keep the Maze centered regardless of the Button canvas
-        transform.position = new Vector3(transform.position.x, -thisCam.orthographicSize / 10, transform.position.z);
-	}
+        
+    }
 }

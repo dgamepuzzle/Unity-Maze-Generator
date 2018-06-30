@@ -13,7 +13,7 @@ public class Cell : MonoBehaviour
     [HideInInspector]
     public bool selectedInRecursiveBacktracking = false;
     [HideInInspector]
-    public Vector2Int coordinatesOfCellInArray = new Vector2Int(0, 0);
+    public Vector2Int coordinatesOfCellInGridArray = new Vector2Int(0, 0);
 
     /// <summary>
     /// Removes a wall from the cell's wall List
