@@ -2,19 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// The player character
+/// </summary>
+/*
+ * The player moves with the WASD buttons, or with the touchscreen. When they touch the goal,
+ * they destroy it and themselves, and inform the "Solve Button Script" that they reached the goal
+ */
 [RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour
 {
-    public float speed;
+    [SerializeField]
+    private float speed;
     private Rigidbody playerRigidbody;
 
-	void Start ()
+	private void Start ()
     {
         playerRigidbody=GetComponent<Rigidbody>();
 		
 	}
 	
-	void Update ()
+	private void Update ()
     {
         Vector3 newPosition = transform.position;
         if(Input.GetKey(KeyCode.W))

@@ -12,10 +12,7 @@ public class CameraScript : MonoBehaviour {
     private Renderer bottomLeftRenderer, topRightRenderer;
     private float zoomingSpeed;
     private Camera thisCam;
-
-    /*
-     * Initilizes variables
-     */
+    
 	private void Start ()
     {
         thisCam=GetComponent<Camera>();

@@ -10,16 +10,17 @@ using UnityEngine.UI;
 public class SolveMazeButton : MonoBehaviour
 {
     private bool gameIsOngoing=false;
-    public Text congratulationsText;
-    public GameObject player;
-    public GameObject goal;
+    [SerializeField]
+    private Text congratulationsText;
+    [SerializeField]
+    private GameObject player,goal;
     
-    void Start()
+    private void Start()
     {
         GetComponent<Button>().onClick.AddListener(TaskOnClick);
     }
 
-    void TaskOnClick()
+    private void TaskOnClick()
     {
         if (!gameIsOngoing)
         {
@@ -33,6 +34,9 @@ public class SolveMazeButton : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Enables the Congratulation text for reaching the goal
+    /// </summary>
     public void PlayerReachedTheGoal()
     {
         congratulationsText.enabled = true;
@@ -40,7 +44,7 @@ public class SolveMazeButton : MonoBehaviour
         StartCoroutine(DisableTextInSeconds(3));
     }
 
-    IEnumerator DisableTextInSeconds(int seconds)
+    private IEnumerator DisableTextInSeconds(int seconds)
     {
         yield return new WaitForSeconds(seconds);
         congratulationsText.enabled = false;

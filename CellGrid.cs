@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//Creates and fills the maze's grid with Cells, and carves the maze's walls depending on the algorithm selected
-//Also manipulates the camera to fit the whole maze in the screen
+/*
+ * Sets up the outter wall of the grid, and calls an algorithm to calculate the maze
+ */
 public class CellGrid : MonoBehaviour
 {
     [SerializeField]
@@ -11,10 +12,7 @@ public class CellGrid : MonoBehaviour
     [SerializeField]
     private Transform[] outerWalls = new Transform[4];
     private int gridSizeX, gridSizeY;
-    //Used in the Recursive Backtracking algorithm. Contains every created cell
-    private Cell[,] cellInTheGrid = new Cell[(int)MazeProperties.MazeWidth,(int)MazeProperties.MazeHeight];
-    //Used in the Sidewinder algorithm. Contains the set of cells that may destroy their north wall
-    List<Cell> sidewinderCellSetList = new List<Cell>();
+    ///<doc>An array containing every Cell in the grid, with the same coordinates as it has on the grid</doc>
 
     private void Start()
     {

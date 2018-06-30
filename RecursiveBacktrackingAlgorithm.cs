@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//The maze generator selects a starting cell at random. Then it looks at its neighboring cells in random order, and sees if any of them have not already been selected
-//If it finds a new suitable cell, it breaks the wall between the two cells and repeats the process.
-//If it can't find any suitable cells, then it returns to the previous selected cell and tries its remaining neigbor cells.
-//When every cell has been selected, then the maze is finished.
+/// <summary>
+/// Calculates the Maze's wall by applying the Recursive Backtracking Algorithm
+/// </summary>
+/* The maze generator selects a starting cell at random. Then it looks at its neighboring cells in random order, and sees if any of them have not already been selected
+ * If it finds a new suitable cell, it breaks the wall between the two cells and repeats the process.
+ * If it can't find any suitable cells, then it returns to the previous selected cell and tries its remaining neigbor cells.
+ * When every cell has been selected, then the maze is finished.
+ */
 public class RecursiveBacktrackingAlgorithm : MazeGeneration
 {
-
     private enum Directions {North,East, South,West};
     private Vector2Int selectedCellCoordinates;
+
     protected override IEnumerator CalculateMazeWalls()
     {
         //A stack that holds cells that have been selected. Used to go back to previous cells if we reach a dead end
@@ -43,26 +47,26 @@ public class RecursiveBacktrackingAlgorithm : MazeGeneration
                 {
                     if ((direction == Directions.North) && (!foundSuitableNeighborCell))
                     {
-                        foundSuitableNeighborCell = CheckForEligibleCell(currentCell, (cellInTheGrid[selectedCellCoordinates.x, selectedCellCoordinates.y + 1]));
+                        foundSuitableNeighborCell = CheckForEligibleCell(currentCell, (cellArray[selectedCellCoordinates.x, selectedCellCoordinates.y + 1]));
                     }
                     else if ((direction == Directions.East) && (!foundSuitableNeighborCell))
                     {
-                        foundSuitableNeighborCell = CheckForEligibleCell(currentCell, (cellInTheGrid[selectedCellCoordinates.x + 1, selectedCellCoordinates.y]));
+                        foundSuitableNeighborCell = CheckForEligibleCell(currentCell, (cellArray[selectedCellCoordinates.x + 1, selectedCellCoordinates.y]));
                     }
                     else if ((direction == Directions.South) && (!foundSuitableNeighborCell))
                     {
-                        foundSuitableNeighborCell = CheckForEligibleCell(currentCell, (cellInTheGrid[selectedCellCoordinates.x, selectedCellCoordinates.y - 1]));
+                        foundSuitableNeighborCell = CheckForEligibleCell(currentCell, (cellArray[selectedCellCoordinates.x, selectedCellCoordinates.y - 1]));
                     }
                     else if ((direction == Directions.West) && (!foundSuitableNeighborCell))
                     {
-                        foundSuitableNeighborCell = CheckForEligibleCell(currentCell, (cellInTheGrid[selectedCellCoordinates.x - 1, selectedCellCoordinates.y]));
+                        foundSuitableNeighborCell = CheckForEligibleCell(currentCell, (cellArray[selectedCellCoordinates.x - 1, selectedCellCoordinates.y]));
                     }
                 }
             }
             //When a suitable Neighbor Cell has been found, it becomes the current cell
             if (foundSuitableNeighborCell)
             {
-                currentCell = cellInTheGrid[selectedCellCoordinates.x, selectedCellCoordinates.y];
+                currentCell = cellArray[selectedCellCoordinates.x, selectedCellCoordinates.y];
                 currentCell.selectedInRecursiveBacktracking = true;
                 selectedCellsCount++;
                 selectedCellsStack.Push(currentCell);
@@ -91,13 +95,18 @@ public class RecursiveBacktrackingAlgorithm : MazeGeneration
         BuildMazeWalls();
     }
 
-    private bool CheckForEligibleCell(Cell currentCell, Cell cellToCheck)
+    /// <summary>
+    /// Checks if the target cell is an eligible cell to move to
+    /// </summary>
+    /// <param name="currentCell">The currently selected cell</param>
+    /// <param name="targetCell">The cell that we check for potential selection</param>
+    /// <returns></returns>
+    private bool CheckForEligibleCell(Cell currentCell, Cell targetCell)
     {
-
-        Vector2Int cellPositionDifference = new Vector2Int(cellToCheck.coordinatesOfCellInGridArray.x - currentCell.coordinatesOfCellInGridArray.x,
-                                                            cellToCheck.coordinatesOfCellInGridArray.y - currentCell.coordinatesOfCellInGridArray.y);
-
-        if (cellToCheck.selectedInRecursiveBacktracking == false)
+        //Denepnding on the difference of the cells positions we know in what direction the target cell is, and what wall we must break to make a path
+        Vector2Int cellPositionDifference = new Vector2Int(targetCell.coordinatesOfCellInGridArray.x - currentCell.coordinatesOfCellInGridArray.x,
+                                                            targetCell.coordinatesOfCellInGridArray.y - currentCell.coordinatesOfCellInGridArray.y);
+        if (targetCell.selectedInRecursiveBacktracking == false)
         {
             if (cellPositionDifference.x > 0)
             {
@@ -105,7 +114,7 @@ public class RecursiveBacktrackingAlgorithm : MazeGeneration
             }
             else if (cellPositionDifference.x < 0)
             {
-                cellToCheck.RemoveWallFromCell("East");
+                targetCell.RemoveWallFromCell("East");
             }
             else if (cellPositionDifference.y > 0)
             {
@@ -113,7 +122,7 @@ public class RecursiveBacktrackingAlgorithm : MazeGeneration
             }
             else if (cellPositionDifference.y < 0)
             {
-                cellToCheck.RemoveWallFromCell("North");
+                targetCell.RemoveWallFromCell("North");
                 
             }
             selectedCellCoordinates += cellPositionDifference;

@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//Every cell has two walls that are its children gameobjects. When the maze is carved, every cell destroys one of its two walls
-//Also contains the coordinates for the cell in a cell array. This data is used on the Recursive Backtracking algorithm.
+/// <summary>
+/// Represents a cell of the grid
+/// </summary>
+//Every cell begins with an array containing data for two walls. The Maze Generation algorithm will inform the cell which wall to delete
+//Also contains the coordinates for the cell in a cell array.
+
 public class Cell : MonoBehaviour
 {
     [SerializeField]
     private GameObject wall;
     private List<string> wallsBelongingToCell = new List<string> { "North", "East" };
 
+    ///<doc>Used in the Recursive Backtracking algorithm, to show if the cell has been selected yet</doc>
     [HideInInspector]
     public bool selectedInRecursiveBacktracking = false;
     [HideInInspector]

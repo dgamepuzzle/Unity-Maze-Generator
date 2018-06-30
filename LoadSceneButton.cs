@@ -8,14 +8,15 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(Button))]
 public class LoadSceneButton : MonoBehaviour
 {
-    public int sceneToLoad;
+    [SerializeField]
+    private int sceneToLoad;
 
-	void Start ()
+	private void Start ()
     {
         GetComponent<Button>().onClick.AddListener(TaskOnClick);
 	}
 
-    void TaskOnClick()
+    private void TaskOnClick()
     {
         SceneManager.LoadScene(sceneToLoad);
     }
