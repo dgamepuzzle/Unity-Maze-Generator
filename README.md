@@ -1,5 +1,5 @@
 # Unity-Maze-Generator
-The Scripts for a Maze Generator I created in Unity. 
+A Maze Generator I created in Unity. 
 
 It features three different algorithms: Binary Tree, Sidewinder and Recursive Backtracking.
 
